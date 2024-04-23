@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Options</title>
+    <style>
+        body {
+            font-size: 16px;
+            text-align: center; /* Center align the content */
+        }
+
+        .form-container {
+            margin-top: 20px; /* Add space between the image and the form */
+        }
+
+        label, #customEmail, #save {
+            font-size: 16px;
+        }
+
+        #customEmail::placeholder {
+            font-size: 14px;
+            color: grey;
+            opacity: 1; /* Required for older browsers */
+        }
+
+        #save {
+            font-size: 16px;
+            margin-left: 5px; /* Add some space between the input and the button */
+        }
+    </style>
+</head>
+<body>
+<img src="../images/options.png">
+<div class="form-container">
+    <label for="customEmail">Custom Email:</label>
+    <input type="email" id="customEmail" placeholder="Enter custom email">
+    <button id="save">Save</button>
+</div>
+<script src="options.js"></script>
+</body>
+</html>
