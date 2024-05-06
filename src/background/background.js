@@ -55,16 +55,21 @@ function injectedFunction(userEmail) {
             { id: 'email', value: userEmail },
             { id: 'email-confirm', value: userEmail },
             { id: 'phone', value: '0805201314' },
-            { id: 'postal-code', value: '89757' },
-            { id: 'street-address', value: 'The way to Heaven' }
+            // 'postal-code' and 'street-address' are optional to fill
+            { id: 'postal-code', value: '89757', optional: true},
+            { id: 'street-address', value: 'The way to Heaven', optional: true}
         ];
 
         // Fill and click each element
-        elements.forEach(({ id, value }) => {
+        elements.forEach(({ id, value, optional }) => {
             const input = doc.getElementById(id);
+            if (input) {
             input.value = value;
             input.dispatchEvent(new Event('change', { bubbles: true }));
             input.click();
+            } else if (!optional) {
+                console.error(`Element with id "${id}" not found.`);
+            }
         });
 
         doc.querySelectorAll('[id*=prefecture]').forEach((dropdown) => {
