@@ -1,31 +1,17 @@
-chrome.runtime.onInstalled.addListener(function () {
-    chrome.contextMenus.create({
-        id: "fillGuestInfo",
-        title: "Tripla QA - Guest Info Filler",
-        contexts: ["all"]
-    });
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.action === 'menuItemClick') {
+    const tab = message.tab;
+    const menuItemId = message.menuItemId;
 
-    chrome.contextMenus.create({
-        id: "switchDomain",
-        title: "Tripla QA - Switch Domain",
-        contexts: ["all"]
-    });
-});
-
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    if (info.menuItemId === "fillGuestInfo") {
-        // Assuming you want to perform the same action as the chrome.action.onClicked:
-        executeGuestInfoFillingScript(tab);
-    } else if (info.menuItemId === "switchDomain") {
-        chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            function: switchDomain
-        });
+    if (menuItemId === "fillGuestInfo") {
+      executeGuestInfoFillingScript(tab);
+    } else if (menuItemId === "switchDomain") {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: switchDomain
+      });
     }
-});
-
-chrome.action.onClicked.addListener(function (tab) {
-    executeGuestInfoFillingScript(tab);
+  }
 });
 
 function executeGuestInfoFillingScript(tab) {
@@ -43,8 +29,7 @@ function injectedFunction(userEmail) {
     const iframeSelector = "iframe#tripla-booking-widget-window";
     const iframe = document.querySelector(iframeSelector);
     if (iframe) {
-        // Send a message to the background script (content) to handle the iframe case.
-        chrome.runtime.sendMessage({ message: "handle-iframe" });
+        alert('The script currently does not support iframes. Please switch to subdomain mode.');
     } else {
         fillForm(document);
         console.log('Form filled successfully.');
@@ -112,12 +97,15 @@ function switchDomain() {
     let newUrl = "";
 
     if (currentUrl.includes('qa.tripla-hotel.com')) {
-        const iframe = document.querySelector('iframe');
-        if (!iframe) {
-            console.error('No iframe found.');
-            return;
+      const iframeSelector = "iframe#tripla-booking-widget-window";
+      const iframe = document.querySelector(iframeSelector);
+      if (iframe) {
+        if (iframe.src != ''){
+          codeValue = getCodeValue(iframe.src);
         }
-        codeValue = getCodeValue(iframe.src);
+      }else {
+        codeValue = getCodeValue(currentUrl);
+      }
     } else if (currentUrl.includes('bw.qa.tripla.ai')) {
         codeValue = getCodeValue(currentUrl);
     }
@@ -153,3 +141,37 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
 });
+
+
+// Listen for messages from content scripts
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.message === 'updateCodeValue') {
+    const selectedCode = request.code;
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length > 0) {
+        const tabId = tabs[0].id;
+        updateUrlWithCodeValue(tabId, selectedCode);
+      }
+    });
+  }
+});
+
+function updateUrlWithCodeValue(tabId, newCode) {
+  chrome.tabs.get(tabId, function (tab) {
+    const currentUrl = tab.url;
+    const url = new URL(currentUrl);
+    const searchParams = new URLSearchParams(url.search);
+    searchParams.set('code', newCode);
+
+    if (url.hostname === 'qa.tripla-hotel.com') {
+      searchParams.append('tripla_booking_widget_open', 'search');
+      updatedUrl = `${url.origin}${url.pathname}?${searchParams.toString()}`;
+    }
+    else{
+      updatedUrl = `${url.origin}${url.pathname}?${searchParams.toString()}`;
+    }
+
+    chrome.tabs.update(tabId, { url: updatedUrl });
+  });
+}

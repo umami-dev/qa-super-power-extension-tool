@@ -2,6 +2,17 @@
 
 All notable changes to the "Tripla QA - Guest Page Filler" extension will be documented in this file.
 
+## [1.0.2] - 2024-05-17
+
+### Added
+- Add a default popup to improve efficiency so we can do same operation with fewer clicks.
+
+### Removed
+- Remove context menus
+
+### Fixed
+- Fix domain switch problem without iframe
+
 ## [1.0.1] - 2024-05-07
 
 ### Added

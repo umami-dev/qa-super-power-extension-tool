@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tripla QA - Guest Page Filler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "permissions": [
     "activeTab",
     "scripting",
@@ -19,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content.js"]
+      "js": ["content/content.js", "popup/popup.js"]
     }
   ],
   "icons": {
@@ -32,7 +32,8 @@
       "16": "images/icon.png",
       "48": "images/icon.png",
       "128": "images/icon.png"
-    }
+    },
+    "default_popup": "popup/popup.html"
   },
   "web_accessible_resources": [
     {
