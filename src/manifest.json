@@ -5,8 +5,7 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "storage",
-    "contextMenus"
+    "storage"
   ],
   "options_page": "options/options.html",
   "host_permissions": [
