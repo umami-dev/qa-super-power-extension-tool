@@ -2,6 +2,12 @@
 
 All notable changes to the "Tripla QA - Guest Page Filler" extension will be documented in this file.
 
+## [1.0.3] - 2024-06-05
+
+### Added
+- Jira/Confluence TestCase Dropdown
+- Create labels dropdown automatically when users are updating TestCase page in confluence and jira ticket pages.
+
 ## [1.0.2] - 2024-05-17
 
 ### Added
