@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tripla QA - Guest Page Filler",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "permissions": [
     "activeTab",
     "scripting",
@@ -19,6 +19,13 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content/content.js", "popup/popup.js"]
+    },
+    {
+      "matches": [
+        "https://umami-me.atlassian.net/wiki/spaces/TECH/*",
+        "https://umami-me.atlassian.net/*"
+      ],
+      "js": ["content/test-case-dropdown.js"]
     }
   ],
   "icons": {
